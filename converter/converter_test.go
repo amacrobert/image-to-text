@@ -45,7 +45,7 @@ func TestASCIIConverter_Convert(t *testing.T) {
 	img.Set(0, 0, color.Black)
 	img.Set(3, 3, color.Black)
 
-	charset := NewSimpleCharset(false)
+	charset := NewSimpleCharset(false, 0, 255)
 	conv := NewASCIIConverter(charset)
 	var buf strings.Builder
 
@@ -75,7 +75,7 @@ func TestASCIIConverter_Convert(t *testing.T) {
 
 func TestASCIIConverter_Convert_ZeroDimensions(t *testing.T) {
 	img := image.NewRGBA(image.Rect(0, 0, 0, 0))
-	charset := NewSimpleCharset(false)
+	charset := NewSimpleCharset(false, 0, 255)
 	conv := NewASCIIConverter(charset)
 	var buf strings.Builder
 

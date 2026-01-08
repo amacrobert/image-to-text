@@ -2,6 +2,10 @@
 
 A CLI tool that converts images to ASCII art.
 
+Input image                       | Output text
+:--------------------------------:|:-------------------------:
+![](./img/statue-of-liberty.jpeg) | ![](./img/statue-of-liberty-output.png)
+
 ## Build
 
 ```bash
@@ -26,6 +30,8 @@ Other targets:
 |------|---------|-------------|
 | `-width` | 80 | Output width in characters |
 | `-invert` | false | Invert brightness (for dark terminal backgrounds) |
+| `-blackpoint` | 0 | Gray value for pure black (0-255) |
+| `-whitepoint` | 255 | Gray value for pure white (0-255) |
 
 ### Examples
 
@@ -38,6 +44,9 @@ Other targets:
 
 # For dark terminal backgrounds
 ./dist/image-to-text -invert photo.png
+
+# Increase contrast by narrowing the gray range
+./dist/image-to-text -blackpoint 50 -whitepoint 200 photo.png
 
 # Run without building
 go run . photo.png

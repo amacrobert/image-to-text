@@ -19,6 +19,8 @@ func main() {
 func run() error {
 	width := flag.Int("width", 80, "output width in characters")
 	invert := flag.Bool("invert", false, "invert brightness (for dark terminal backgrounds)")
+	blackpoint := flag.Int("blackpoint", 0, "gray value for pure black (0-255)")
+	whitepoint := flag.Int("whitepoint", 255, "gray value for pure white (0-255)")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options] <image-file>\n\n", os.Args[0])
@@ -45,7 +47,7 @@ func run() error {
 	}
 
 	// Convert to ASCII
-	charset := converter.NewSimpleCharset(*invert)
+	charset := converter.NewSimpleCharset(*invert, uint8(*blackpoint), uint8(*whitepoint))
 	conv := converter.NewASCIIConverter(charset)
 
 	return conv.Convert(img, os.Stdout, *width)
