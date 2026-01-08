@@ -5,13 +5,19 @@ A CLI tool that converts images to ASCII art.
 ## Build
 
 ```bash
-go build .
+make build
 ```
+
+This creates the binary at `dist/image-to-text`.
+
+Other targets:
+- `make test` - run tests
+- `make clean` - remove build artifacts
 
 ## Usage
 
 ```bash
-./image-to-text [options] <image-file>
+./dist/image-to-text [options] <image-file>
 ```
 
 ### Options
@@ -25,13 +31,13 @@ go build .
 
 ```bash
 # Basic usage
-./image-to-text photo.png
+./dist/image-to-text photo.png
 
 # Wider output
-./image-to-text -width 120 photo.jpg
+./dist/image-to-text -width 120 photo.jpg
 
 # For dark terminal backgrounds
-./image-to-text -invert photo.png
+./dist/image-to-text -invert photo.png
 
 # Run without building
 go run . photo.png
