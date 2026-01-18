@@ -33,7 +33,8 @@ func TestToGrayscale(t *testing.T) {
 }
 
 func TestASCIIConverter_Convert(t *testing.T) {
-	// Create a simple 4x4 test image with black and white pixels
+	// Create a 4x4 test image with black and white regions
+	// At width=4: scaleX=1, scaleY=2, so each char averages 1x2 pixels
 	img := image.NewRGBA(image.Rect(0, 0, 4, 4))
 	// Fill with white
 	for y := 0; y < 4; y++ {
@@ -41,8 +42,11 @@ func TestASCIIConverter_Convert(t *testing.T) {
 			img.Set(x, y, color.White)
 		}
 	}
-	// Add some black pixels
+	// Fill first column black (both rows of the character rectangle)
 	img.Set(0, 0, color.Black)
+	img.Set(0, 1, color.Black)
+	// Fill last column bottom black (both rows of second line's rectangle)
+	img.Set(3, 2, color.Black)
 	img.Set(3, 3, color.Black)
 
 	charset := NewSimpleCharset(false, 0, 255)
@@ -56,9 +60,9 @@ func TestASCIIConverter_Convert(t *testing.T) {
 
 	output := buf.String()
 
-	// Should contain dark character for black pixels
+	// Should contain dark character for black regions
 	if !strings.Contains(output, "$") {
-		t.Error("expected '$' character for black pixels in output")
+		t.Error("expected '$' character for black regions in output")
 	}
 
 	// Should contain space for white pixels

@@ -43,20 +43,40 @@ func (c *ASCIIConverter) Convert(img image.Image, w io.Writer, width int) error 
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			// Sample pixel at scaled position
-			srcX := int(float64(x) * scaleX)
-			srcY := int(float64(y) * scaleY)
+			// Calculate the rectangle of source pixels this character represents
+			srcX1 := int(float64(x) * scaleX)
+			srcY1 := int(float64(y) * scaleY)
+			srcX2 := int(float64(x+1) * scaleX)
+			srcY2 := int(float64(y+1) * scaleY)
 
 			// Clamp to image bounds
-			if srcX >= imgWidth {
-				srcX = imgWidth - 1
+			if srcX2 > imgWidth {
+				srcX2 = imgWidth
 			}
-			if srcY >= imgHeight {
-				srcY = imgHeight - 1
+			if srcY2 > imgHeight {
+				srcY2 = imgHeight
 			}
 
-			pixel := img.At(bounds.Min.X+srcX, bounds.Min.Y+srcY)
-			gray := toGrayscale(pixel)
+			// Ensure at least one pixel is sampled
+			if srcX2 <= srcX1 {
+				srcX2 = srcX1 + 1
+			}
+			if srcY2 <= srcY1 {
+				srcY2 = srcY1 + 1
+			}
+
+			// Average all pixels in the rectangle
+			var sum float64
+			count := 0
+			for py := srcY1; py < srcY2; py++ {
+				for px := srcX1; px < srcX2; px++ {
+					pixel := img.At(bounds.Min.X+px, bounds.Min.Y+py)
+					sum += float64(toGrayscale(pixel))
+					count++
+				}
+			}
+
+			gray := uint8(sum / float64(count))
 			char := c.charset.CharFor(gray)
 
 			fmt.Fprint(w, string(char))
